@@ -18,7 +18,7 @@ Plots the hyperplane of the model in an axes
     """
     if ax is None:
         ax = plt.gca(projection="3d")
-
+        
     interval = int(1 / interval)
 
     # get the separating hyperplane
@@ -53,6 +53,15 @@ Plots the hyperplane of the model in an axes
 
     return mesh
 
+def plot_fitting_plane(clf, ax: Axes3D):
+    x_min, x_max = ax.get_xlim()
+    y_min, y_max = ax.get_ylim()
+
+    yy, xx = numpy.meshgrid(numpy.linspace(y_min, y_max), numpy.linspace(x_min, x_max))
+
+    z = clf.predict(numpy.c_[xx.ravel(), yy.ravel()])
+    z = z.reshape(xx.shape)
+    ax.plot_wireframe(xx, yy, z)
 
 def test_classification_data(n_samples=100, random_state=None) -> (np.ndarray, np.ndarray):
     return make_classification(n_samples, n_features=3, n_informative=3, n_redundant=0, random_state=random_state)
